@@ -32,7 +32,7 @@ const RESOURCES = {"assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": 
 "canvaskit/canvaskit.js.symbols": "a3c9f77715b642d0437d9c275caba91e",
 "canvaskit/canvaskit.wasm": "9b6a7830bf26959b200594729d73538e",
 "canvaskit/skwasm_heavy.wasm": "b0be7910760d205ea4e011458df6ee01",
-"flutter_bootstrap.js": "36c1f936082d6e820fde94e5fd6e1d32",
+"flutter_bootstrap.js": "f1c0643ba3a3ae65132d097e6e16e698",
 "manifest.json": "eef757a7809401d3f99bbe015f2451b6",
 "version.json": "c5cf2d840d27ae0f78c0f3a1fb99e2f9",
 "index.html": "0f6dce9958111486576315efd07a7112",
