@@ -1,11 +1,11 @@
 {
-    "name": "prosody",
-    "short_name": "prosody",
+    "name": "awzan",
+    "short_name": "awzan",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",
     "theme_color": "#hexcode",
-    "description": "A new Flutter project.",
+    "description": "مُحلِّل أوزان الأبيات الشعرية والكلام العربي.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
