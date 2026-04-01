@@ -109,6 +109,10 @@ var alawakher = {
 
       if (qafyah.isHaa() && !(asSabek?.isSaken() ?? false)) {
         value += "${qafyah.value}$harakah${isMawsool ? '' : 'ي'}";
+      }
+      if (qafyah.isMeem() &&
+          (asSabek?.harakah?.value?.contains(dammah) ?? false)) {
+        value += "مُو";
       } else {
         value += "${qafyah.value}$harakah";
         if (isRawy) {
