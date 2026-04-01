@@ -358,9 +358,17 @@ class Node {
     return false;
   }
 
+  bool isMeemAljama() {
+    return isMeem() &&
+        parent != null &&
+        (parent!.isHaa() || parent!.isKaf()) &&
+        parent!.harakah?.value == dammah;
+  }
+
   bool isEii() => value == 'إ';
   bool isHaa() => value == 'ه';
   bool isMeem() => value == 'م';
+  bool isKaf() => value == 'ك';
 
   bool hasTanweenFath() =>
       harakah != null && harakah!.value!.contains(tanweenFath);
