@@ -12,6 +12,11 @@ var almawsolat = {
     // Because it comes as a replacement for the alif alwasl
 
     Node next = a.node.child!;
+    String prefix = a.node.parent == null
+        ? next.isLam()
+              ? 'أ$fatha'
+              : 'إ$kasrah'
+        : '';
 
     if (next.isLam()) {
       bool isLamTarif = a.node.isLamTarif();
@@ -22,7 +27,7 @@ var almawsolat = {
           next: next.child,
           writing: PChunk.fromValue(
             a.node,
-            isLamTarif ? "ل${a.node.harakah?.value}" : "",
+            "$prefix${isLamTarif ? "ل${a.node.harakah?.value}" : ""}",
           ),
         );
       } else {
@@ -30,37 +35,17 @@ var almawsolat = {
           next: next.child,
           writing: PChunk.fromValue(
             a.node,
-            isLamTarif ? "ل${a.node.harakah?.value}ل" : "ل",
+            "$prefix${isLamTarif ? "ل${a.node.harakah?.value}ل" : "ل"}",
           ),
         );
       }
-    } else {
-      // alif wasl or alif t'rif
-      // alif being at the begining
-      if (a.node.parent == null) {
-        // At the begining, it's either (إ) or (أ)
-        // It's (أ) only if the next harf is a lam with sukoon, or null
-        // That's because they will form al-t'areef (ال)
-        Node? afterAlif = a.node.nextHarf();
-        if (afterAlif == null || (afterAlif.isLam() && afterAlif.isSaken())) {
-          return RuleResult(
-            next: afterAlif,
-            writing: PChunk.fromValue(a.node, 'أ$fatha'),
-          );
-        } else {
-          return RuleResult(
-            next: afterAlif,
-            writing: PChunk.fromValue(a.node, 'إ$kasrah'),
-          );
-        }
-      } else {
-        return RuleResult(
-          next: a.node.child,
-          // Here remains alif al wasl, and it's not written
-          // (e. g قالَ الناسُ will be قالَنْناسُ without the alif)
-          writing: PChunk.fromValue(a.node, ""),
-        );
-      }
     }
+
+    return RuleResult(
+      next: a.node.child,
+      // Here remains alif al wasl, and it's not written
+      // (e. g قالَ الناسُ will be قالَنْناسُ without the ali)
+      writing: PChunk.fromValue(a.node, prefix),
+    );
   },
 };
