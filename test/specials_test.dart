@@ -45,11 +45,14 @@ void main() {
     expect(binary, "${faaelun.value}${fa.value}");
   });
 
-  test("The prosody of word الرحمنُ is same as ${tf('مَفعُولَاتُ')}", () {
-    String binary = ProsodyWriting.textToBinary('الرحمنُ');
+  test(
+    "The prosody of word الرحمنُ is same as ${tf('فَعلُن')} ${tf('فَعلُن')}",
+    () {
+      String binary = ProsodyWriting.textToBinary('الرحمنُ');
 
-    expect(binary, mafoulatu.value);
-  });
+      expect(binary, "${falun.value}${falun.value}");
+    },
+  );
 
   test("The prosody of word هذا is same as ${tf('فَعلُن')}", () {
     String binary = ProsodyWriting.textToBinary('هذا');
