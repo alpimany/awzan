@@ -369,6 +369,8 @@ class Node {
   bool isHaa() => value == 'ه';
   bool isMeem() => value == 'م';
   bool isKaf() => value == 'ك';
+  bool isWaw() => value == 'و';
+  bool isRaa() => value == 'ر';
 
   bool hasTanweenFath() =>
       harakah != null && harakah!.value!.contains(tanweenFath);

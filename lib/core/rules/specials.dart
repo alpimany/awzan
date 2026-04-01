@@ -1,11 +1,19 @@
 import 'package:awzan/core/parser/ast.dart';
 import 'package:awzan/core/parser/constants.dart';
+import 'package:awzan/core/rules/alawakher.dart';
 import 'package:awzan/core/rules/rules.dart';
 import 'package:awzan/core/utils/prosody_writing/prosody_chunk.dart';
 
 class Specials {
   static List<String> muarraf = ["الذي", "الذين", "التي", "الرحمن"];
-  static List<String> ghairMuarraf = ["هذا", "هذه", "هذي", "هؤلاء", "هذان"];
+  static List<String> ghairMuarraf = [
+    "هذا",
+    "هذه",
+    "هذي",
+    "هؤلاء",
+    "هذان",
+    "عمرو",
+  ];
   static List<String> ghairMuhaddad = ["رحمن", "لكن", 'آ'];
 
   static RuleResult? tryParseMuarraf(Node? node) {
@@ -82,6 +90,7 @@ class Specials {
             extent: node.child!.pos - node.pos,
           ),
         ),
+        'عمرو' => _parseAmru(node),
         _ => RuleResult(
           next: node.child,
           writing: PChunk(
@@ -94,6 +103,24 @@ class Specials {
     }
 
     return null;
+  }
+
+  static RuleResult? _parseAmru(Node? node) {
+    Node raa = node!.child!.child!;
+
+    // We should omit the waw but changing the children
+    raa.child = raa.child?.child;
+
+    var alawakherResult = alawakher['work']!(RuleArgs(node: raa)) as RuleResult;
+
+    return RuleResult(
+      next: raa.child,
+      writing: PChunk(
+        value: "عَم${alawakherResult.writing.value}",
+        from: node.pos,
+        extent: (raa.pos - node.pos) + PChunk.getExtent(raa),
+      ),
+    );
   }
 
   static RuleResult? tryParseGhairMuhaddad(Node? node) {
