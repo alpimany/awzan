@@ -107,12 +107,11 @@ var alawakher = {
         fatha,
       ].firstWhere((el) => qafyah.harakah!.value!.contains(el));
 
-      if (qafyah.isHaa() && !(asSabek?.isSaken() ?? false)) {
+      if (qafyah.isHaa() && (asSabek != null && !asSabek.isSaken())) {
         value += "${qafyah.value}$harakah${isMawsool ? '' : 'ي'}";
-      }
-      if (qafyah.isMeem() &&
+      } else if (qafyah.isMeem() &&
           (asSabek?.harakah?.value?.contains(dammah) ?? false)) {
-        value += "مُو";
+        value += "مُ${isMawsool ? '' : 'و'}";
       } else {
         value += "${qafyah.value}$harakah";
         if (isRawy) {
