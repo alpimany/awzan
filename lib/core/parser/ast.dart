@@ -311,11 +311,20 @@ class Node {
   }
 
   bool isAlifTarif() {
-    var afterLam = nextHarf();
+    var afterAlif = nextHarf();
     return value == "ا" &&
-        afterLam != null &&
-        afterLam.isLam() &&
-        (afterLam.harakah == null || afterLam.harakah!.value == sukoon);
+        afterAlif != null &&
+        afterAlif.isLam() &&
+        (afterAlif.harakah == null ||
+            afterAlif.harakah!.value == sukoon ||
+            // There are special case for
+            // الَّذي، الَّذين، الَّتي
+            // The lam can have a shaddah
+            [
+              'ذين',
+              'تي',
+              'ذي',
+            ].any((el) => afterAlif.child?.makesWord(el) ?? false));
   }
 
   bool isLamTarif() {
@@ -351,6 +360,7 @@ class Node {
 
   bool isEii() => value == 'إ';
   bool isHaa() => value == 'ه';
+  bool isMeem() => value == 'م';
 
   bool hasTanweenFath() =>
       harakah != null && harakah!.value!.contains(tanweenFath);
