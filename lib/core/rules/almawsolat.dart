@@ -1,4 +1,5 @@
 import 'package:awzan/core/parser/ast.dart';
+import 'package:awzan/core/parser/constants.dart';
 import 'package:awzan/core/rules/rules.dart';
 import 'package:awzan/core/utils/prosody_writing/prosody_chunk.dart';
 
@@ -33,13 +34,33 @@ var almawsolat = {
           ),
         );
       }
+    } else {
+      // alif wasl or alif t'rif
+      // alif being at the begining
+      if (a.node.parent == null) {
+        // At the begining, it's either (إ) or (أ)
+        // It's (أ) only if the next harf is a lam with sukoon, or null
+        // That's because they will form al-t'areef (ال)
+        Node? afterAlif = a.node.nextHarf();
+        if (afterAlif == null || (afterAlif.isLam() && afterAlif.isSaken())) {
+          return RuleResult(
+            next: afterAlif,
+            writing: PChunk.fromValue(a.node, 'أ$fatha'),
+          );
+        } else {
+          return RuleResult(
+            next: afterAlif,
+            writing: PChunk.fromValue(a.node, 'إ$kasrah'),
+          );
+        }
+      } else {
+        return RuleResult(
+          next: a.node.child,
+          // Here remains alif al wasl, and it's not written
+          // (e. g قالَ الناسُ will be قالَنْناسُ without the alif)
+          writing: PChunk.fromValue(a.node, ""),
+        );
+      }
     }
-
-    return RuleResult(
-      next: a.node.child,
-      // Here remains alif al wasl, and it's not written
-      // (e. g قالَ الناسُ will be قالَنْناسُ without the alif)
-      writing: PChunk.fromValue(a.node, ""),
-    );
   },
 };
