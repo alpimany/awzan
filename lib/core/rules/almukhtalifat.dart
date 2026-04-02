@@ -1,5 +1,6 @@
 import 'package:awzan/core/parser/ast.dart';
 import 'package:awzan/core/parser/constants.dart';
+import 'package:awzan/core/rules/alawakher.dart';
 import 'package:awzan/core/rules/rules.dart';
 import 'package:awzan/core/rules/specials.dart';
 import 'package:awzan/core/utils/prosody_writing/prosody_chunk.dart';
@@ -27,18 +28,44 @@ final almukhtalifat = [
         (a.node.isStartOfSequence('الله') || a.node.isStartOfSequence('لله')),
     "work": (RuleArgs a) {
       bool withAlif = a.node.isStartOfSequence('الله');
+      Node haa = withAlif ? a.node.nthChild(3)! : a.node.nthChild(2)!;
       bool isBegining = a.node.parent == null;
+      bool isLast = haa.isEndOfWord();
+
+      String suffix = "";
+
+      if (isLast) {
+        var alawakherResult =
+            alawakher['work']!(
+                  RuleArgs(
+                    node: Node(
+                      type: .harf,
+                      pos: 0,
+                      value: haa.value,
+                      harakah: haa.harakah,
+                      child: haa.child,
+                      parent: Node(type: .harf, pos: 0, value: "ا"),
+                    ),
+                  ),
+                )
+                as RuleResult;
+
+        suffix = alawakherResult.writing.value;
+      } else {
+        suffix = "ه${haa.value}";
+      }
 
       return RuleResult(
-        next: a.node.nthChild(withAlif ? 3 : 2),
+        next: haa.child,
         writing: PChunk(
-          value: withAlif
-              ? isBegining
-                    ? "أَللَا"
-                    : "للَا"
-              : "ل${a.node.harakah?.value ?? fatha}للَا",
+          value:
+              '${withAlif
+                  ? isBegining
+                        ? "أَللَا"
+                        : "للَا"
+                  : "ل${a.node.harakah?.value ?? fatha}للَا"}$suffix',
           from: a.node.pos,
-          extent: a.node.nthChild(withAlif ? 3 : 2)!.pos - a.node.pos,
+          extent: (haa.pos - a.node.pos) + PChunk.getExtent(haa),
         ),
       );
     },
