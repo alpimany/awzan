@@ -4,6 +4,7 @@ import 'package:awzan/core/parser/constants.dart';
 import 'package:awzan/core/rules/rules.dart';
 import 'package:awzan/core/tafaeel/tafaeel.dart';
 import 'package:awzan/core/utils/prosody_writing/prosody_chunk.dart';
+import 'package:path/path.dart';
 
 class ProsodyWriting {
   static Node? convertToAST(String text) {
@@ -28,12 +29,16 @@ class ProsodyWriting {
       var prev = (index - 1) > 0
           ? chunkedBits.elementAtOrNull(index - 1)
           : null;
+      var next = (index + 1) < chunkedBits.length
+          ? chunkedBits.elementAtOrNull(index + 1)
+          : null;
 
       if (prev != null) {
         var len = prev.value.length;
         var joined = "${prev.value}${chunk.value}";
 
-        if (joined.startsWith("00", len - 1)) {
+        if (joined.startsWith("00", len - 1) &&
+            (next != null || (joined.length - len - 1 > 0))) {
           errors.add(
             ProsodyError(
               from: prev.pos + (prev.extent - 1),
