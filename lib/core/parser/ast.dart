@@ -307,7 +307,7 @@ class Node {
 
     return (n != null) &&
         !(n.isAlifWawAlJamaaAh() || n.isAlifTarif()) &&
-        (n.isSaken() || n.hasShaddah());
+        ((n.isSaken() && n.nextHarf() != null) || n.hasShaddah());
   }
 
   bool isAlifTarif() {
