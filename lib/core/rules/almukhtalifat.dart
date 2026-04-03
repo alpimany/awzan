@@ -7,6 +7,21 @@ import 'package:awzan/core/utils/prosody_writing/prosody_chunk.dart';
 
 final almukhtalifat = [
   {
+    "matcher": (RuleArgs a) =>
+        a.node.parent?.type == .masafah &&
+        a.node.makesWord("بن") &&
+        a.node.isSaken() &&
+        a.node.child!.nextHarf() != null,
+    "work": (RuleArgs a) {
+      Node noon = a.node.child!;
+
+      return RuleResult(
+        next: a.node.nthChild(3),
+        writing: PChunk.combine(a.node, noon, "بن${noon.harakah?.value}"),
+      );
+    },
+  },
+  {
     "matcher": (RuleArgs a) => a.node.nextHarf()?.isWawAlJamaaAh() ?? false,
     "work": (RuleArgs a) {
       Node? afterAlif = a.node.nthChild(2)?.nextHarf();
