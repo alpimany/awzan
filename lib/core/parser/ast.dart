@@ -361,14 +361,15 @@ class Node {
   bool isMeemAljama() {
     return isMeem() &&
         parent != null &&
-        (parent!.isHaa() || parent!.isKaf()) &&
-        parent!.hasHarakah();
+        ((parent!.isHaa() || parent!.isKaf()) && parent!.hasHarakah() ||
+            (parent!.isTaa() && parent?.harakah?.value == dammah));
   }
 
   bool isEii() => value == 'إ';
   bool isHaa() => value == 'ه';
   bool isMeem() => value == 'م';
   bool isKaf() => value == 'ك';
+  bool isTaa() => value == 'ت';
   bool isWaw() => value == 'و';
   bool isRaa() => value == 'ر';
 
