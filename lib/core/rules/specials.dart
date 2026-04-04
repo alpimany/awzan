@@ -13,6 +13,7 @@ class Specials {
     "هؤلاء",
     "هذان",
     "عمرو",
+    "أولي",
   ];
   static List<String> ghairMuhaddad = ["رحمن", "لكن", 'آ'];
 
@@ -91,6 +92,7 @@ class Specials {
           ),
         ),
         'عمرو' => _parseAmru(node),
+        'أولي' => _parseOule(node),
         _ => RuleResult(
           next: node.child,
           writing: PChunk(
@@ -119,6 +121,27 @@ class Specials {
         value: "عَم${alawakherResult.writing.value}",
         from: node.pos,
         extent: (raa.pos - node.pos) + PChunk.getExtent(raa),
+      ),
+    );
+  }
+
+  static RuleResult? _parseOule(Node? node) {
+    Node waw = node!.child!;
+    Node yaa = waw.child!.child!;
+    Node? next = yaa.nextHarf();
+
+    bool isMawsool = next?.isAlifWasl() ?? false;
+
+    if (!waw.isSaken()) {
+      return RuleResult(next: waw, writing: PChunk.make(node));
+    }
+
+    return RuleResult(
+      next: next,
+      writing: PChunk(
+        value: "أُلِ${isMawsool ? '' : 'ي'}",
+        from: node.pos,
+        extent: (yaa.pos - node.pos) + PChunk.getExtent(yaa),
       ),
     );
   }
