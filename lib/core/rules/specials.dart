@@ -15,7 +15,7 @@ class Specials {
     "عمرو",
     "أولي",
   ];
-  static List<String> ghairMuhaddad = ["رحمن", "لكن", 'آ'];
+  static List<String> ghairMuhaddad = ["رحمن", 'آ', "لكن", "إله"];
 
   static RuleResult? tryParseMuarraf(Node? node) {
     if (node == null) return null;
@@ -146,6 +146,40 @@ class Specials {
     );
   }
 
+  static RuleResult _parseLaken(Node node) {
+    Node kaf = node.child!;
+
+    if (kaf.harakah != null && kaf.harakah?.value != kasrah) {
+      return RuleResult(next: kaf, writing: PChunk.make(node));
+    }
+
+    return RuleResult(
+      next: kaf.child,
+      writing: PChunk(
+        value: "لَاكِ",
+        from: node.pos,
+        extent: (kaf.pos - node.pos) + PChunk.getExtent(kaf),
+      ),
+    );
+  }
+
+  static RuleResult _parseIlah(Node node) {
+    Node lam = node.child!;
+
+    if (lam.harakah == null || lam.harakah!.value != fatha) {
+      return RuleResult(next: lam, writing: PChunk.make(node));
+    }
+
+    return RuleResult(
+      next: lam.child,
+      writing: PChunk(
+        value: "إِلَا",
+        from: node.pos,
+        extent: (lam.pos - node.pos) + PChunk.getExtent(lam),
+      ),
+    );
+  }
+
   static RuleResult? tryParseGhairMuhaddad(Node? node) {
     if (node == null) return null;
 
@@ -156,14 +190,6 @@ class Specials {
 
     if (special.isNotEmpty) {
       return switch (special) {
-        'لكن' => RuleResult(
-          next: node.nthChild(2),
-          writing: PChunk(
-            value: "لَاكِ",
-            from: node.pos,
-            extent: node.nthChild(2)!.pos - node.pos,
-          ),
-        ),
         'رحمن' => RuleResult(
           next: node.nthChild(3),
           writing: PChunk(
@@ -172,6 +198,8 @@ class Specials {
             extent: node.nthChild(3)!.pos - node.pos,
           ),
         ),
+        "لكن" => _parseLaken(node),
+        "إله" => _parseIlah(node),
         'آ' => RuleResult(
           next: node.child,
           writing: PChunk(
