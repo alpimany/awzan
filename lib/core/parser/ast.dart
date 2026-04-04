@@ -362,7 +362,7 @@ class Node {
     return isMeem() &&
         parent != null &&
         (parent!.isHaa() || parent!.isKaf()) &&
-        parent!.harakah?.value == dammah;
+        parent!.hasHarakah();
   }
 
   bool isEii() => value == 'إ';

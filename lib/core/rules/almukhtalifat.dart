@@ -26,11 +26,13 @@ final almukhtalifat = [
     "work": (RuleArgs a) {
       Node? afterAlif = a.node.nthChild(2)?.nextHarf();
       String suffix = afterAlif != null && afterAlif.isAlifWasl() ? "" : "و";
+      bool isMushaddad = a.node.hasShaddah();
 
       return RuleResult(
         next: a.node.nthChild(3),
         writing: PChunk(
-          value: "${a.node.value}$dammah$suffix",
+          value:
+              "${isMushaddad ? a.node.value : ''}${a.node.value}$dammah$suffix",
           from: a.node.pos,
           extent: 2,
         ),
